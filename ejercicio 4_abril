@@ -1,0 +1,219 @@
+#El modelo aditivo es apropiado cuando la magnitud de las fluctuaciones estacionales de la serie
+#no varía al hacerlo la tendencia.
+#Se usa el modelo multiplicativo cuando la magnitud de las fluctuaciones estacionales de la serie
+#crece y decrece proporcionalmente con los crecimientos y decrecimientos de la tendencia.
+
+#### una vez que logramos descomponer la st en diversos los elementos de estacionalidad 
+#y tendencia hay que desestacionalizar la st y eliminar la tendencia ######
+
+#### EXISTE TENDENCIA CUANDO existe un patron en los datos a largo plazo, ya sea 
+### que aumenta o disminuye los datos 
+##### La estacionalidad existe cuando 
+### la ST cuando es influenciado por factores estacionales (por ejemplo, el
+###trimestre del año , el mes , o el día de la semana).--La longitud es constante.
+### existen componentes ciclicos en los datos cuando 
+##se detectan  incrementos y caídas que no son de tiempo determinado
+##(duración por lo general de al menos 2 años ).
+
+### DE estos 3 elementos normalmente existen confusiones para detectarlos entre 
+### la estacionalidad y el componente ciclico
+###Principales diferencias entre estos dos componentes 
+# 1( patrón estacional longitud constante ; patrón cíclico Longitud variable
+# 2(  duración media del componente ciclico  más largo que la longitud del patrón estacional)
+#3) magnitud de ciclico más variable que magnitud del patrón estacional
+#4)  El momento de picos y caidas es predecible con los datos estacionales 
+#, pero impredecible a largo plazo con datos cíclicos .
+
+install.packages("fpp")
+require(fpp)
+data(elec)
+plot(window(elec,start=1980),ylab="GWh",xlab="Year",main="Australian electricity production")
+##ESTACIONALIDAD, TENDENCIA ALCISTA Y no CICLICO
+plot(bricksq,ylab="million units",xlab="Year",main="Australian clay brick production")
+###ESTACIONALIDAD Y CICLO; NO MUCHO TENDENCIOA
+plot(hsales,main="Sales of new one-family houses, USA",ylab="Total sales",xlab="Year")
+#NO ESTACIONALIDAD NI TENDENCIA; POSIBLE CICLO
+###############3EJEMPLOS GRAFICAS DETECTAR TENDENCIA, ESTACIONALIDAD Y CICLO
+
+
+apple <- read.csv ("C:/Users/SALA-C15/Desktop/Bimbo.csv", header = T)
+apple_ts <- ts(apple[,1], start = 2004, frequency = 12)
+plot(apple_ts)
+seasonplot(apple_ts)
+monthplot(apple_ts)
+#ANÁLISIS
+#De forma general en la gráfica no existe una tendencia, pero hasta el 2011 aproximadamente
+#Se puede observar una tendencia alcista, seguido de bajas e inestabilidad.
+#No se observar estacionalidad ni patrones cíclicos.
+#No parece una buena acción para invertir porque está en niveles muy bajos y no parece
+#que pronto vaya a comenzar a subir.
+
+ica <- read.csv ("C:/Users/SALA-C15/Desktop/indica.csv", header = T)
+ica_ts <- ts(ica, start = 2000, frequency = 12)
+plot(ica_ts)
+seasonplot(ica_ts)
+monthplot(ica_ts)
+#En esta gráfica no existe ninguna tendencia y el comportamiento es muy errático
+#No se observa tampoco estacionalidad, pero hay algunos cambios abruptos que 
+#son patrones cíclicos, que varíane en magnitud.
+#Su tendencia general es la baja desde hace unos 3 años.
+#No se recomienda invertir.
+
+netflix <- read.csv ("C:/Users/SALA-C15/Desktop/Microsoft.csv", header = T)
+netflix_ts <- ts(netflix[,5], start = 2012, frequency = 12)
+plot(netflix_ts)
+seasonplot(netflix_ts)
+monthplot(netflix_ts)
+#Esta acción tenía una tendencia mayormente alcista hasta el 2015, donde sufre una gran caída.
+#Hay algunos cambios abruptos, que son patrones cíclicos.
+#No se recomienda invertir.
+
+#Graficar las 3 juntas
+pdf(file="Graficas_acciones.pdf")
+ts.plot(apple_ts, ica_ts, netflix_ts, col=1:3, main="Verde=Netflix, Negro=ICA, Rojo=Apple")
+dev.off()
+
+### ahora bien una vez que tenemos y conocemos la gr[afica para determinar con mayor precision
+### las tendencias y estacionalidad se utiliza la funcion season plot que esta en la libreria fpp]
+install.packages ("fpp")
+require (fpp)
+seasonplot(apple_ts,s= 12, year.labels=TRUE,
+           main="valor acciones APPLE",
+           ylab="valor cierre",col=rainbow(20),year.labels.left=TRUE,pch=19)
+
+monthplot(apple_ts,ylab="valor cierre",xlab="Month",
+          main="valor acciones APPLE")
+
+##### con monthplot pódemos hacer un analisis de la st dependiendo del periodo 
+## de los datos por ejemplo si tenemos trimestral se pueden analizar los 4 trimestres.... en grafica
+
+monthplot(icats,ylab="valor cierre",xlab="Month",
+          main="valor acciones ICA")
+
+########### funciones utilizadas
+ST graficas
+plot or plot.ts
+Grafica de temporalidad 
+seasonplot
+graficas de subseries temporales 
+monthplot
+
+#######################CORRELACION Y COVARIANZA
+#Covarianza y correlación : medida del grado
+#relación lineal entre dos variables (y Y x).
+
+### auto covarianza y auto correlaccion
+###3 Autocovariancia y autocorrelación : medida
+#relación lineal entre los valores retardados de una
+#series de tiempo y.
+
+# se mide  la relación entre: yt and yt−1
+#yt and yt−2
+#yt and yt−3, etc.
+
+
+
+###3 para desestacionalizar y eliminar la tendencia necesitamos conocer la correlacion de 
+### las variables para realizar mejores pronosticos de nuestra serie de tiempo 
+
+### en muchas casos las variables estan correlacionadas... entonces si nosotros logramos 
+#identificar la correlacion podemos mejorar los pronosticoa si las correlaciones son altasst 
+### la correlacion estructura en ST esta determinada por la función de correlacion y se estima
+### para la ST observada 
+
+###Autocorrelación
+# a veces sucede que  los valores que toma una variable en el tiempo no
+#son independientes entre sí, sino que un valor determinado depende de los valores anteriores,
+
+
+### para obtener la correlación se necesita obytener primero la covarianza
+#### 
+
+############ covarianza##############
+
+##Ejercicio: Verificar que ña formulña de la covarianza 
+##y la correlacion den el mismo resultado que las funciones cov(x,y) y cor(x,y)
+
+## la covarianza es una medida de asociación entre dos variables
+### Cov(x, y) =suma(xi − x (media))(yi − y ((media)))/(n − 1)
+#ejemplo en R
+accbim <- read.csv ("C:/Users/SALA-C15/Desktop/ejer_bim.csv", header = T)
+x <- accbim [,2]
+y <- accbim [,5]
+n<- length(x)
+sum((x) - mean(x))*(y - mean(y)) / (n - 1) ## calculamos la covarianza  con formula
+cov(x, y) ### funcion de R para obtener la covarianza
+## la correlacion tambien es una medida de relacion entre dos variables que permite 
+
+#Cor(x, y) = Cov(x, y) \ sd(x)sd(y)
+
+cov(x,y) / (sd(x)*sd(y)) #calculamos la correlacion con formula
+
+cor(x,y) # funcion de R para obtener la correlacion 
+
+#################3la correlaci[on nos permite conocer si existe un problema para realizar 
+### el pronostico de nuestra St ]
+### una alta correlacion nos indica que al 
+
+Acf (beer, "type = correlation", plot = F)
+
+#### EJERCICIOS
+###1)Analizar el año de las tres empresas elegidas (seasonplot) y elegir los tres años que ubiquen
+###con estacionalidad, ciclo o tendencia...
+###Interpretar estos tres años
+###2) Calcular con fórmula la funcion de covarianza y correlacion en la combinacion
+###de las tres empresas, es decir, 
+###empresa 1 = x, empresa 2 = y, empresa 3 = z, calcular ls correlaciones de
+### cor (x,y), cor(y,z) y cor(x,z) para hacerlas compatibles utilicen el window
+bimbo <- read.csv ("C:/Users/SALA-C15/Desktop/Bimbo.csv", header = T)
+bimbo_ts <- ts(bimbo[,1], start = 2004, frequency = 12)
+
+microsoft <- read.csv ("C:/Users/SALA-C15/Desktop/Microsoft.csv", header = T)
+microsoft_ts <- ts(microsoft[,5], start = 2012, frequency = 12)
+
+ica <- read.csv ("C:/Users/SALA-C15/Desktop/indica.csv", header = T)
+ica_ts <- ts(ica, start = 2000, frequency = 12)
+
+require (fpp)
+seasonplot(bimbo_ts,s= 12, year.labels=TRUE,
+           main="valor acciones BIMBO",
+           ylab="valor cierre",col=rainbow(20),year.labels.left=TRUE,pch=19)
+monthplot(bimbo_ts,ylab="valor cierre",xlab="Month",
+          main="valor acciones BIMBO")
+
+seasonplot(microsoft_ts,s= 12, year.labels=TRUE,
+           main="valor acciones Microsoft",
+           ylab="valor cierre",col=rainbow(20),year.labels.left=TRUE,pch=19)
+monthplot(microsoft_ts,ylab="valor cierre",xlab="Month",
+          main="valor acciones Microsotf")
+
+seasonplot(ica_ts,s= 12, year.labels=TRUE,
+           main="valor acciones ICA",
+           ylab="valor cierre",col=rainbow(20),year.labels.left=TRUE,pch=19)
+monthplot(ica_ts,ylab="valor cierre",xlab="Month",
+          main="valor acciones ICA")
+
+x <- bimbo [,1]
+y <- microsoft [,5]
+z <- ica [,1]
+n<- length(x)
+sum((x) - mean(x))*(y - mean(y)) / (n - 1) ## calculamos la covarianza  con formula
+cov(x, y) ### funcion de R para obtener la covarianza
+## la correlacion tambien es una medida de relacion entre dos variables que permite 
+#Cor(x, y) = Cov(x, y) \ sd(x)sd(y)
+cov(x,y) / (sd(x)*sd(y)) #calculamos la correlacion con formula
+cor(x,y)
+
+sum((x) - mean(x))*(z - mean(z)) / (n - 1) ## calculamos la covarianza  con formula
+cov(x, z) ### funcion de R para obtener la covarianza
+## la correlacion tambien es una medida de relacion entre dos variables que permite 
+#Cor(x, y) = Cov(x, y) \ sd(x)sd(y)
+cov(x,z) / (sd(x)*sd(z)) #calculamos la correlacion con formula
+cor(x,z) 
+
+sum((y) - mean(y))*(z - mean(z)) / (n - 1) ## calculamos la covarianza  con formula
+cov(y, z) ### funcion de R para obtener la covarianza
+## la correlacion tambien es una medida de relacion entre dos variables que permite 
+#Cor(x, y) = Cov(x, y) \ sd(x)sd(y)
+cov(y,z) / (sd(y)*sd(z)) #calculamos la correlacion con formula
+cor(y,z) 
